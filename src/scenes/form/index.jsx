@@ -7,9 +7,31 @@ import Header from "../../components/Header";
 const Form = () => {
   const isNonMobile = useMediaQuery("(min-width:600px)");
 
-  const handleFormSubmit = (values) => {
-    console.log(values);
+  const handleFormSubmit = async (values, { resetForm }) => {
+    try {
+      const response = await fetch("http://localhost:5000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+  
+      if (response.ok) {
+        console.log("User created successfully!");
+        alert("User successfully created!");
+        resetForm(); // Reset form setelah submit sukses
+      } else {
+        const errorData = await response.json();
+        console.error("Failed to create user", errorData);
+        alert("Failed to create user: " + errorData.error);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while submitting the form.");
+    }
   };
+  
 
   return (
     <Box m="20px">
