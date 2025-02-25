@@ -39,6 +39,7 @@
     "react-scripts": "5.0.1",
     "sequelize": "^6.37.5",
     "web-vitals": "^2.1.4",
+    "webpack-dev-server": "^5.2.0",
     "yup": "^1.6.1"
   },
   "scripts": {

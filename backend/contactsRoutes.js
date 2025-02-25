@@ -3,85 +3,92 @@ const { Pool } = require("pg");
 
 const router = express.Router();
 const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "dashboard",
-    password: "1",
-    port: 5432,
+    user: "kafkauser",
+    host: "172.21.80.1",
+    database: "staging_dwh",
+    password: "JsuA2d5sh4bhLAya",
+    port: 5458,
 });
 
-// Tambah kontak ke tabel contacts
+// Tambah data ke tabel master_konsol
 router.post("/", async (req, res) => {
   try {
-    const { userId, phone, address } = req.body;
+    console.log("Request received:", req.body);
+    const { code_fs, code_calk, coa_holding, description, type } = req.body;
 
-    if (!userId || !phone || !address) {
-      return res.status(400).json({ error: "userId, phone, and address are required" });
+    if (!code_fs || !code_calk || !coa_holding || !description || !type) {
+      return res.status(400).json({ error: "Semua field diperlukan" });
     }
-    
+
     const result = await pool.query(
-      "INSERT INTO contacts (user_id, phone, address) VALUES ($1, $2, $3) RETURNING *",
-      [userId, phone, address]
+      "INSERT INTO master_konsol (code_fs, code_calk, coa_holding, description, type) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+      [code_fs, code_calk, coa_holding, description, type]
     );
 
-    res.status(201).json({ message: "Contact created", contact: result.rows[0] });
+    console.log("Data berhasil ditambahkan:", result.rows[0]);
+    res.status(201).json({ message: "Data berhasil ditambahkan", data: result.rows[0] });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
 
-// Dapatkan semua kontak
+// Dapatkan semua data dari master_konsol
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM contacts");
+    const result = await pool.query("SELECT * FROM master_konsol");
     res.json(result.rows);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
 
-// Update kontak berdasarkan ID
+// Update data berdasarkan ID di master_konsol
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { phone, address } = req.body;
+    const { code_fs, code_calk, coa_holding, description, type } = req.body;
 
-    if (!phone || !address) {
-      return res.status(400).json({ error: "phone and address are required" });
+    if (!code_fs || !code_calk || !coa_holding || !description || !type) {
+      return res.status(400).json({ error: "Semua field diperlukan" });
+    }
+
+    // Pastikan ID ada sebelum update
+    const checkId = await pool.query("SELECT id FROM master_konsol WHERE id = $1", [id]);
+    if (checkId.rowCount === 0) {
+      return res.status(404).json({ error: "Data tidak ditemukan" });
     }
 
     const result = await pool.query(
-      "UPDATE contacts SET phone = $1, address = $2 WHERE id = $3 RETURNING *",
-      [phone, address, id]
+      "UPDATE master_konsol SET code_fs = $1, code_calk = $2, coa_holding = $3, description = $4, type = $5 WHERE id = $6 RETURNING *",
+      [code_fs, code_calk, coa_holding, description, type, id]
     );
 
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Contact not found" });
-    }
-
-    res.json({ message: "Contact updated", contact: result.rows[0] });
+    res.json({ message: "Data berhasil diperbarui", data: result.rows[0] });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
 
-// Hapus kontak berdasarkan ID
+// Hapus data berdasarkan ID di master_konsol
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query("DELETE FROM contacts WHERE id = $1 RETURNING *", [id]);
 
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: "Contact not found" });
+    // Pastikan ID ada sebelum dihapus
+    const checkId = await pool.query("SELECT id FROM master_konsol WHERE id = $1", [id]);
+    if (checkId.rowCount === 0) {
+      return res.status(404).json({ error: "Data tidak ditemukan" });
     }
 
-    res.json({ message: "Contact deleted", contact: result.rows[0] });
+    const result = await pool.query("DELETE FROM master_konsol WHERE id = $1 RETURNING *", [id]);
+
+    res.json({ message: "Data berhasil dihapus", data: result.rows[0] });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Database error:", error);
+    res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
 
