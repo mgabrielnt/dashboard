@@ -14,7 +14,7 @@ const FinancialStatements = () => {
   // Fetch data dari backend PostgreSQL
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/contacts")
+      .get("http://localhost:5000/api/contacts1")
       .then(response => {
         // Pastikan setiap baris data memiliki 'id'
         const formattedData = response.data.map(item => ({

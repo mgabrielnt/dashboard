@@ -6,6 +6,8 @@ import Dashboard from "./scenes/dashboard";
 import Team from "./scenes/team";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
+import Contacts1 from "./scenes/contacts1";
+import Contacts2 from "./scenes/contacts2";
 import Bar from "./scenes/bar";
 import Form from "./scenes/form";
 import Line from "./scenes/line";
@@ -24,14 +26,16 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <div className="app" style={{ display: "flex", height: "100vh" }}>
           <Sidebar isSidebar={isSidebar} />
-          <main className="content">
+          <main className="content" style={{ flexGrow: 1, overflow: "auto" }}>
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />
+              <Route path="/contacts1" element={<Contacts1 />} />
+              <Route path="/contacts2" element={<Contacts2 />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/form" element={<Form />} />
               <Route path="/bar" element={<Bar />} />

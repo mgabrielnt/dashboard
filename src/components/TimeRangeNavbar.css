@@ -1,0 +1,84 @@
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0;  /* Removed padding completely */
+  }
+  
+  .navbar {
+    background-color: #3E4396; /* blue-600 equivalent */
+    color: white;
+    border-radius: 9999px; /* rounded-full */
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-amd */
+    width: 100%;
+    max-width: 505px; /* max-w-md equivalent */
+    position: relative;
+    justify-content: space-between;
+    transition: all 0.3s ease; /* Add smooth transition for width changes */
+  }
+  
+  .tabs-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+  
+  .tab-button {
+    padding: 4px 16px;
+    border-radius: 9999px;
+    font-weight: 500; /* font-medium */
+    font-size: 0.875rem; /* text-sm */
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease; /* Add smooth transition */
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  
+  .tab-button.active {
+    background-color: white;
+    color: #2563eb; /* blue-600 */
+  }
+  
+  .date-range {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 9999px;
+    margin-left: 8px; /* ml-2 */
+    padding: 4px 12px;
+    color: #4b5563; /* text-gray-700 */
+    font-size: 0.875rem; /* text-sm */
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    height: 32px; /* fixed height to match button height */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 600px) {
+    .tab-button {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+    }
+    
+    .date-range {
+      font-size: 0.75rem;
+    }
+  }
+  
+  /* Animation for width transitions */
+  .navbar.collapsed {
+    width: auto;
+  }
+  
+  .navbar.expanded {
+    width: 100%;
+  }
