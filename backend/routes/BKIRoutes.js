@@ -10,16 +10,34 @@ const pool = new Pool({
     port: 5458,
 });
 
-// Ambil semua data dari tabel bki_monthly_tb
+
+
+// Ambil data dengan filter tahun & bulan
 router.get("/", async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM bki_monthly_tb");
+    const { year_start, year_end, month_start, month_end } = req.query;
+    let query = "SELECT * FROM bki_monthly_tb WHERE 1=1";
+    let params = [];
+
+    if (year_start && year_end) {
+      query += " AND year BETWEEN $1 AND $2";
+      params.push(year_start, year_end);
+    }
+    if (month_start && month_end) {
+      query += " AND posting_period BETWEEN $3 AND $4";
+      params.push(month_start, month_end);
+    }
+
+    const result = await pool.query(query, params);
     res.json(result.rows);
   } catch (error) {
     console.error("Database error:", error);
     res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
+
+
+
 
 // Tambah data ke tabel bki_monthly_tb
 router.post("/", async (req, res) => {

@@ -1,19 +1,32 @@
-import { Box, IconButton, useTheme, Popover, Button, Menu, MenuItem } from "@mui/material";
+import { Box, IconButton, useTheme, Popover, Button, Menu, MenuItem, Avatar, Typography, Divider } from "@mui/material";
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ColorModeContext, tokens } from "../../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
-const Topbar = () => {
+const API_URL = "http://localhost:5000"; // Add this line to define the backend URL
+
+const Topbar = ({ setIsSidebar, auth, onLogout }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const navigate = useNavigate();
+  
+  // Main menu popup
   const [open, setOpen] = useState(false);
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(null);
+
+  // User profile menu
+  const [userMenuAnchor, setUserMenuAnchor] = useState(null);
+  const userMenuOpen = Boolean(userMenuAnchor);
 
   const handleClick = () => {
     setOpen(true);
@@ -34,6 +47,37 @@ const Topbar = () => {
   };
 
   const menuOpen = Boolean(menuAnchor);
+
+  // User menu handlers
+  const handleUserMenuOpen = (event) => {
+    setUserMenuAnchor(event.currentTarget);
+  };
+  
+  const handleUserMenuClose = () => {
+    setUserMenuAnchor(null);
+  };
+  
+  const handleProfileClick = () => {
+    handleUserMenuClose();
+    navigate("/profile");
+  };
+  
+  const handleLogout = () => {
+    handleUserMenuClose();
+    if (onLogout) {
+      onLogout();
+    }
+  };
+
+  // Make sure auth and user are defined
+  const user = auth?.user || {};
+
+  // Function to get the correct profile picture URL
+  const getProfilePictureUrl = (pictureUrl) => {
+    if (!pictureUrl) return "";
+    if (pictureUrl.startsWith("http")) return pictureUrl;
+    return `${API_URL}${pictureUrl}`;
+  };
 
   return (
     <Box display="flex" justifyContent="space-between" p={2}>
@@ -81,9 +125,9 @@ const Topbar = () => {
                   onClick={(e) => handleMenuOpen(e, index)}
                   sx={{ 
                     color: "white", 
-                    backgroundColor: "rgb(30, 35, 80)", // Warna biru gelap
-                    border: "2px solid black", // Garis luar hitam
-                    borderRadius: "12px", // Ujung kotak lebih estetik
+                    backgroundColor: "rgb(30, 35, 80)", 
+                    border: "2px solid black", 
+                    borderRadius: "12px", 
                     fontSize: "1rem",
                     padding: "10px",
                     '&:hover': { backgroundColor: "rgba(255, 255, 255, 0.2)" } 
@@ -121,9 +165,9 @@ const Topbar = () => {
                 onClick={(e) => handleMenuOpen(e, 4)}
                 sx={{ 
                   color: "white", 
-                  backgroundColor: "rgb(30, 35, 80)", // Warna biru gelap
-                  border: "2px solid black", // Garis luar hitam
-                  borderRadius: "12px", // Ujung kotak lebih estetik
+                  backgroundColor: "rgb(30, 35, 80)", 
+                  border: "2px solid black", 
+                  borderRadius: "12px", 
                   fontSize: "1rem",
                   padding: "12px",
                   '&:hover': { backgroundColor: "rgba(255, 255, 255, 0.2)" } 
@@ -152,6 +196,7 @@ const Topbar = () => {
           </Box>
         </Popover>
       </Box>
+
       {/* ICONS */}
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>
@@ -167,9 +212,87 @@ const Topbar = () => {
         <IconButton>
           <SettingsOutlinedIcon />
         </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
+        
+        {/* USER PROFILE BUTTON & MENU */}
+        <IconButton onClick={handleUserMenuOpen}>
+          {user?.profile_picture ? (
+            <Avatar 
+              src={getProfilePictureUrl(user.profile_picture)} 
+              sx={{ 
+                width: 24, 
+                height: 24,
+                backgroundColor: user?.role === "admin" ? colors.greenAccent[600] : colors.blueAccent[500]
+              }}
+            >
+              {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </Avatar>
+          ) : (
+            <PersonOutlinedIcon />
+          )}
         </IconButton>
+        
+        {/* USER PROFILE DROPDOWN MENU */}
+        <Menu
+          anchorEl={userMenuAnchor}
+          open={userMenuOpen}
+          onClose={handleUserMenuClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: 'visible',
+              filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+              mt: 1.5,
+              backgroundColor: colors.primary[400],
+              color: colors.grey[100],
+              '& .MuiAvatar-root': {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        >
+          <Box px={2} py={1}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {user?.name || "User"}
+            </Typography>
+            <Typography variant="body2" color={colors.grey[300]}>
+              {user?.email || ""}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "inline-block",
+                px: 1,
+                py: 0.5,
+                mt: 0.5,
+                borderRadius: "4px",
+                backgroundColor: user?.role === "admin" ? colors.greenAccent[600] : colors.blueAccent[700],
+              }}
+            >
+              {user?.role || "user"}
+            </Typography>
+          </Box>
+          
+          <Divider sx={{ borderColor: colors.grey[700] }} />
+          
+          <MenuItem onClick={handleProfileClick} sx={{ color: colors.grey[100] }}>
+            <AccountCircleIcon sx={{ mr: 1, color: colors.greenAccent[400] }} /> Profile
+          </MenuItem>
+          
+          <MenuItem onClick={handleUserMenuClose} sx={{ color: colors.grey[100] }}>
+            <HelpOutlineIcon sx={{ mr: 1, color: colors.greenAccent[400] }} /> Help
+          </MenuItem>
+          
+          <Divider sx={{ borderColor: colors.grey[700] }} />
+          
+          <MenuItem onClick={handleLogout} sx={{ color: colors.grey[100] }}>
+            <LogoutIcon sx={{ mr: 1, color: colors.redAccent[400] }} /> Logout
+          </MenuItem>
+        </Menu>
       </Box>
     </Box>
   );

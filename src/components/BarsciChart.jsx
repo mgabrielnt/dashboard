@@ -2,6 +2,7 @@ import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const BarsciChart = ({ isDashboard = false }) => {
   const [data, setData] = useState([]);
@@ -11,18 +12,60 @@ const BarsciChart = ({ isDashboard = false }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/barsci');
-        const jsonData = await response.json();
-        setData(jsonData);
+        // Configure axios with all credentials options
+        const response = await axios.get('http://localhost:5000/api/barsci', {
+          withCredentials: true,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const jsonData = response.data;
+        console.log('Raw API Response:', jsonData);
+        
+        // Process data with detailed logging
+        let processedData;
+        if (Array.isArray(jsonData)) {
+          console.log('Using direct array data');
+          processedData = jsonData;
+        } else if (jsonData && typeof jsonData === 'object') {
+          if (Array.isArray(jsonData.data)) {
+            console.log('Using nested data array');
+            processedData = jsonData.data;
+          } else if (jsonData.results && Array.isArray(jsonData.results)) {
+            console.log('Using results array');
+            processedData = jsonData.results;
+          } else if (jsonData.rows && Array.isArray(jsonData.rows)) {
+            console.log('Using rows array');
+            processedData = jsonData.rows;
+          } else {
+            console.log('Converting object to array');
+            processedData = Object.keys(jsonData).map(key => {
+              return { bulan: key, sci: jsonData[key] };
+            });
+          }
+        } else {
+          throw new Error("Invalid data format received from server");
+        }
+        
+        // Normalize data structure
+        const normalizedData = processedData.map(item => ({
+          bulan: item.bulan || item.month || item.year || 'Unknown',
+          sci: item.sci || item.value || 0
+        }));
+        
+        setData(normalizedData);
       } catch (error) {
         console.error("Error fetching bar chart data:", error);
+        setData([]);
       }
     };
 
     fetchData();
   }, []);
 
-  // If data is empty, return null or a loading indicator
+  // If data is empty, return loading indicator
   if (data.length === 0) {
     return <div>Loading...</div>;
   }

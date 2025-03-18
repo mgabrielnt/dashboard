@@ -6,10 +6,11 @@ import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import TrafficIcon from "@mui/icons-material/Traffic";
-import React, { useState, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useCallback, useMemo, lazy, Suspense, useRef } from 'react';
 import Header from "../../components/Header";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import html2pdf from 'html2pdf.js';
 
 // Lazy load chart components
 const LineChart = lazy(() => import("../../components/LineChart"));
@@ -48,6 +49,8 @@ const MemoizedStatBox = React.memo(StatBox);
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const dashboardRef = useRef(null);
+  const [isExporting, setIsExporting] = useState(false);
   
   const [timeRangeData, setTimeRangeData] = useState({
     period: "Day",
@@ -95,24 +98,42 @@ const Dashboard = () => {
     }
   ], [colors.greenAccent]);
 
-  // Memoize the download button to prevent re-render
-  const DownloadButton = useMemo(() => (
-    <Button
-      sx={{
-        backgroundColor: colors.blueAccent[700],
-        color: colors.grey[100],
-        fontSize: "14px",
-        fontWeight: "bold",
-        padding: "10px 20px",
-      }}
-    >
-      <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-      Download Reports
-    </Button>
-  ), [colors.blueAccent, colors.grey]);
+  // Function to generate PDF from dashboard content
+  const generatePDF = useCallback(() => {
+    if (!dashboardRef.current || isExporting) return;
+
+    setIsExporting(true);
+
+    const dashboardContent = dashboardRef.current;
+    const date = new Date().toISOString().slice(0, 10);
+    const filename = `dashboard-report-${date}.pdf`;
+
+    // Configure PDF options
+    const options = {
+      margin: 10,
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    // Generate PDF
+    html2pdf()
+      .set(options)
+      .from(dashboardContent)
+      .save()
+      .then(() => {
+        console.log("PDF generated successfully");
+        setIsExporting(false);
+      })
+      .catch(error => {
+        console.error("Error generating PDF:", error);
+        setIsExporting(false);
+      });
+  }, [isExporting]);
 
   return (
-    <Box m="20px">
+    <Box m="20px" ref={dashboardRef}>
       {/* HEADER - With TimeRangeNavbar and Download button */}
       <Box 
         display="flex" 
@@ -130,7 +151,23 @@ const Dashboard = () => {
 
         {/* Right side - Download button */}
         <Box>
-          {DownloadButton}
+          <Button
+            onClick={generatePDF}
+            disabled={isExporting}
+            sx={{
+              backgroundColor: colors.blueAccent[700],
+              color: colors.grey[100],
+              fontSize: "14px",
+              fontWeight: "bold",
+              padding: "10px 20px",
+              "&:hover": {
+                backgroundColor: colors.blueAccent[800],
+              },
+            }}
+          >
+            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
+            {isExporting ? "Generating PDF..." : "Download Reports"}
+          </Button>
         </Box>
       </Box>
 

@@ -1,64 +1,59 @@
 import { useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import { Link, useLocation, useNavigate } from "react-router-dom"; // Tambahkan useLocation & useNavigate
+import { Box, IconButton, Typography, useTheme, Avatar } from "@mui/material";
+import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 
-// Perbaikan pada Item component
+// Add the API_URL constant
+const API_URL = "http://localhost:5000";
+
+// Function to get the correct profile picture URL
+const getProfilePictureUrl = (pictureUrl) => {
+  if (!pictureUrl) return "";
+  if (pictureUrl.startsWith("http")) return pictureUrl;
+  return `${API_URL}${pictureUrl}`;
+};
+
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const navigate = useNavigate(); // Tambahkan useNavigate
-  
   return (
     <MenuItem
       active={selected === title}
       style={{
         color: colors.grey[100],
       }}
-      onClick={() => {
-        setSelected(title);
-        navigate(to); // Gunakan navigate secara langsung alih-alih Link
-      }}
+      onClick={() => setSelected(title)}
       icon={icon}
     >
       <Typography>{title}</Typography>
+      <Link to={to} />
     </MenuItem>
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ isSidebar, auth }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const location = useLocation();
-  
-  // Update selected berdasarkan pathname saat ini
-  useState(() => {
-    const path = location.pathname;
-    if (path === "/") setSelected("Dashboard");
-    else if (path === "/team") setSelected("Manage Team");
-    else if (path === "/contacts") setSelected("BKI");
-    else if (path === "/contacts1") setSelected("SCI");
-    else if (path === "/contacts2") setSelected("SI");
-    else if (path === "/calendar") setSelected("Calendar");
-    else if (path === "/bar") setSelected("Bar Chart");
-    else if (path === "/pie") setSelected("Pie Chart");
-    else if (path === "/line") setSelected("Line Chart");
-    else if (path === "/geography") setSelected("Geography Chart");
-  }, [location.pathname]);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Default values if auth or user is undefined
+  const user = auth?.user || {};
+  const isAdmin = user?.role === "admin";
 
   return (
     <Box
@@ -78,10 +73,12 @@ const Sidebar = () => {
         "& .pro-menu-item.active": {
           color: "#6870fa !important",
         },
+        display: isSidebar ? "block" : "none",
       }}
     >
       <ProSidebar collapsed={isCollapsed}>
         <Menu iconShape="square">
+          {/* LOGO AND MENU ICON */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
@@ -98,7 +95,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  ADMIN
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -107,16 +104,21 @@ const Sidebar = () => {
             )}
           </MenuItem>
 
-          {!isCollapsed && (
+          {/* USER PROFILE */}
+          {!isCollapsed && user && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src={`../../assets/user.png`}
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
+                <Avatar
+                  alt={user.name || "User"}
+                  src={getProfilePictureUrl(user.profile_picture)}
+                  sx={{ 
+                    width: 100, 
+                    height: 100,
+                    border: `2px solid ${colors.greenAccent[500]}`,
+                  }}
+                >
+                  {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                </Avatar>
               </Box>
               <Box textAlign="center">
                 <Typography
@@ -125,15 +127,16 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Ed Roh
+                  {user.name || "User"}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  VP Fancy Admin
+                  {isAdmin ? "Admin User" : "Regular User"}
                 </Typography>
               </Box>
             </Box>
           )}
 
+          {/* MENU ITEMS */}
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
@@ -150,30 +153,42 @@ const Sidebar = () => {
             >
               Data
             </Typography>
+            
+            {/* Show Team menu only for admin users */}
+            {isAdmin && (
+              <Item
+                title="Manage Team"
+                to="/team"
+                icon={<PeopleOutlinedIcon />}
+                selected={selected}
+                setSelected={setSelected}
+              />
+            )}
+            
             <Item
-              title="Manage Team"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="BKI"
+              title="SCI"
               to="/contacts"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="SCI"
+              title="BKI"
               to="/contacts1"
-              icon={<ReceiptOutlinedIcon />}
+              icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="SI"
               to="/contacts2"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Invoices Balances"
+              to="/invoices"
               icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -187,13 +202,19 @@ const Sidebar = () => {
               Pages
             </Typography>
             <Item
+              title="Profile"
+              to="/profile"
+              icon={<PersonOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
               title="Calendar"
               to="/calendar"
               icon={<CalendarTodayOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-
             <Typography
               variant="h6"
               color={colors.grey[300]}
