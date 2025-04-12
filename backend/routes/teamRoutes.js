@@ -7,7 +7,7 @@ const { validateTeamMember } = require('../middleware/validation');
 
 const pool = new Pool({
     user: process.env.DB_USER || "kafkauser",
-    host: process.env.DB_HOST || "172.21.80.1",
+    host: process.env.DB_HOST || "172.26.128.1",
     database: process.env.DB_NAME || "staging_dwh",
     password: process.env.DB_PASSWORD || "JsuA2d5sh4bhLAya",
     port: process.env.DB_PORT || 5458,

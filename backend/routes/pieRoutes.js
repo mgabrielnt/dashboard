@@ -4,7 +4,7 @@ const { Pool } = require("pg");
 const router = express.Router();
 const pool = new Pool({
     user: "kafkauser",
-    host: "172.21.80.1",
+    host: "172.26.128.1",
     database: "staging_dwh",
     password: "JsuA2d5sh4bhLAya",
     port: 5458,
@@ -12,16 +12,61 @@ const pool = new Pool({
 
 router.get("/", async (req, res) => {
   try {
-    const query = `
+    // Extract time range parameters
+    const { startYear, endYear, startMonth, endMonth, startDate, endDate } = req.query;
+    
+    // Build the query with dynamic WHERE conditions
+    let query = `
       SELECT id, description, SUM(konsol) as total_konsol
       FROM split_pivot_all_full_real_test
       WHERE id IN (218, 77, 138, 200)
-      GROUP BY id, description
     `;
+    
+    // Add time range filters if provided
+    const whereConditions = [];
+    const queryParams = [];
+    let paramIndex = 1;
+    
+    // Filter by year range
+    if (startYear && endYear) {
+      whereConditions.push(`tahun >= $${paramIndex} AND tahun <= $${paramIndex + 1}`);
+      queryParams.push(startYear, endYear);
+      paramIndex += 2;
+    }
+    
+    // Filter by month range (if in the same year)
+    if (startMonth && endMonth && startYear && endYear && startYear === endYear) {
+      whereConditions.push(`bulan >= $${paramIndex} AND bulan <= $${paramIndex + 1}`);
+      queryParams.push(startMonth, endMonth);
+      paramIndex += 2;
+    } else if (startMonth && endMonth && startYear && endYear) {
+      // More complex case for cross-year ranges
+      whereConditions.push(`
+        (
+          (tahun = $${paramIndex} AND bulan >= $${paramIndex + 1}) OR
+          (tahun > $${paramIndex} AND tahun < $${paramIndex + 2}) OR
+          (tahun = $${paramIndex + 2} AND bulan <= $${paramIndex + 3})
+        )
+      `);
+      queryParams.push(startYear, startMonth, endYear, endMonth);
+      paramIndex += 4;
+    }
+    
+    // Apply the WHERE conditions if any
+    if (whereConditions.length > 0) {
+      query += ` AND ${whereConditions.join(' AND ')}`;
+    }
+    
+    // Complete the query with GROUP BY
+    query += ` GROUP BY id, description`;
+    
+    console.log("Pie Chart Query:", query);
+    console.log("Query Parameters:", queryParams);
+    
+    // Execute the query
+    const result = await pool.query(query, queryParams);
 
-    const result = await pool.query(query);
-
-    // Format data agar sesuai dengan Nivo Pie Chart
+    // Format data for Nivo Pie Chart
     const pieData = result.rows.map(row => ({
       id: row.description,
       label: row.description,
@@ -34,11 +79,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
-
-
-
-
-
 
 // Tambah data ke tabel split_pivot_all_full_real_test
 router.post("/", async (req, res) => {

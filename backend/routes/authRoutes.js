@@ -5,10 +5,13 @@ const { Pool } = require('pg');
 const { OAuth2Client } = require('google-auth-library');
 const router = express.Router();
 
+// Tetapkan JWT_SECRET yang konsisten
+const JWT_SECRET = 'your_jwt_secret_key_should_be_long_and_complex';
+
 // Initialize PostgreSQL pool
 const pool = new Pool({
   user: process.env.DB_USER || "kafkauser",
-  host: process.env.DB_HOST || "172.21.80.1",
+  host: process.env.DB_HOST || "172.26.128.1",
   database: process.env.DB_NAME || "staging_dwh",
   password: process.env.DB_PASSWORD || "JsuA2d5sh4bhLAya",
   port: process.env.DB_PORT || 5458,
@@ -55,10 +58,10 @@ router.post('/register', async (req, res) => {
       [newUser.rows[0].id]
     );
 
-    // Generate JWT token
+    // Generate JWT token with hardcoded secret
     const token = jwt.sign(
       { id: newUser.rows[0].id, role: newUser.rows[0].role },
-      process.env.JWT_SECRET || 'your_jwt_secret',
+      JWT_SECRET,
       { expiresIn: '1d' }
     );
 
@@ -113,10 +116,10 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token
+    // Generate JWT token with hardcoded secret
     const token = jwt.sign(
       { id: user.id, role: user.role },
-      process.env.JWT_SECRET || 'your_jwt_secret',
+      JWT_SECRET,
       { expiresIn: '1d' }
     );
 
@@ -194,10 +197,10 @@ router.post('/google-auth', async (req, res) => {
           // Don't overwrite existing custom profile pictures
         }
   
-        // Generate JWT token
+        // Generate JWT token with hardcoded secret
         const jwtToken = jwt.sign(
           { id: user.id, role: user.role },
-          process.env.JWT_SECRET || 'your_jwt_secret',
+          JWT_SECRET,
           { expiresIn: '1d' }
         );
   
@@ -271,10 +274,10 @@ router.post('/google-auth', async (req, res) => {
           // Don't overwrite existing custom profile pictures
         }
         
-        // Generate JWT token
+        // Generate JWT token with hardcoded secret
         const jwtToken = jwt.sign(
           { id: user.id, role: user.role },
-          process.env.JWT_SECRET || 'your_jwt_secret',
+          JWT_SECRET,
           { expiresIn: '1d' }
         );
         
@@ -330,8 +333,8 @@ router.get('/profile', async (req, res) => {
   }
 
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    // Verify token with hardcoded secret
+    const decoded = jwt.verify(token, JWT_SECRET);
     
     // Check if session exists and is valid
     const sessionResult = await pool.query(
@@ -385,8 +388,8 @@ router.put('/profile', async (req, res) => {
   }
 
   try {
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your_jwt_secret');
+    // Verify token with hardcoded secret
+    const decoded = jwt.verify(token, JWT_SECRET);
     
     // Begin transaction
     const client = await pool.connect();

@@ -5,10 +5,22 @@ const { Pool } = require("pg");
 // PostgreSQL connection
 const pool = new Pool({
   user: "kafkauser",
-  host: "172.21.80.1",
+  host: "172.26.128.1",
   database: "staging_dwh",
   password: "JsuA2d5sh4bhLAya",
   port: 5458,
+});
+
+// GET count of events - Using a different approach with path matching
+router.get("/count", async (req, res) => {
+  try {
+    console.log("Count endpoint accessed");
+    const result = await pool.query("SELECT COUNT(*) FROM calendar_events");
+    res.json({ count: parseInt(result.rows[0].count) });
+  } catch (error) {
+    console.error("Error counting events:", error);
+    res.status(500).json({ error: "Failed to count events", details: error.message });
+  }
 });
 
 // GET all events
@@ -26,7 +38,21 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query("SELECT * FROM calendar_events WHERE id = $1", [id]);
+    
+    // Skip the 'count' route - this is a safeguard in case Express routing doesn't work as expected
+    if (id === 'count') {
+      console.log("Count accessed through /:id route - this should not happen");
+      return res.status(400).json({ error: "Invalid route. Please use /count endpoint directly." });
+    }
+    
+    // Add validation to ensure id is numeric
+    if (isNaN(parseInt(id))) {
+      console.log(`Non-numeric ID received: ${id}`);
+      return res.status(400).json({ error: "Invalid ID format. ID must be numeric." });
+    }
+    
+    console.log(`Fetching event with ID: ${id}`);
+    const result = await pool.query("SELECT * FROM calendar_events WHERE id = $1", [parseInt(id)]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Event not found" });
@@ -64,6 +90,12 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Add validation to ensure id is numeric
+    if (isNaN(parseInt(id))) {
+      return res.status(400).json({ error: "Invalid ID format. ID must be numeric." });
+    }
+    
     const { title, start, end, allDay } = req.body;
     
     if (!title || !start) {
@@ -72,7 +104,7 @@ router.put("/:id", async (req, res) => {
     
     const result = await pool.query(
       "UPDATE calendar_events SET title = $1, start_date = $2, end_date = $3, all_day = $4, updated_at = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *",
-      [title, start, end || start, allDay || false, id]
+      [title, start, end || start, allDay || false, parseInt(id)]
     );
     
     if (result.rows.length === 0) {
@@ -91,7 +123,12 @@ router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     
-    const result = await pool.query("DELETE FROM calendar_events WHERE id = $1 RETURNING *", [id]);
+    // Add validation to ensure id is numeric
+    if (isNaN(parseInt(id))) {
+      return res.status(400).json({ error: "Invalid ID format. ID must be numeric." });
+    }
+    
+    const result = await pool.query("DELETE FROM calendar_events WHERE id = $1 RETURNING *", [parseInt(id)]);
     
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "Event not found" });

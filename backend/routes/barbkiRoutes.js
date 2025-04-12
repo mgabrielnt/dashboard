@@ -1,10 +1,11 @@
+// barbki.js route
 const express = require("express");
 const { Pool } = require("pg");
 
 const router = express.Router();
 const pool = new Pool({
     user: "kafkauser",
-    host: "172.21.80.1",
+    host: "172.26.128.1",
     database: "staging_dwh",
     password: "JsuA2d5sh4bhLAya",
     port: 5458,
@@ -12,21 +13,70 @@ const pool = new Pool({
 
 router.get("/", async (req, res) => {
   try {
-    const query = `
+    // Extract time range parameters
+    const { startYear, endYear, startMonth, endMonth, startDate, endDate } = req.query;
+    
+    // Start building the query
+    let query = `
     SELECT 
         EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year, 
         EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
         bki
     FROM split_pivot_all_full_real_test
     WHERE id = 138
-      AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= 1 -- Filter mulai dari bulan 8 (Agustus)
-    GROUP BY year, bulan, bki
-    ORDER BY year, bulan;
+      AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= 1 -- Filter mulai dari bulan 1
     `;
-
-
-    const result = await pool.query(query);
     
+    // Add time range filters if provided
+    const whereConditions = [];
+    const queryParams = [];
+    let paramIndex = 1;
+    
+    // Filter by year range
+    if (startYear && endYear) {
+      whereConditions.push(`EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) >= $${paramIndex} AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) <= $${paramIndex + 1}`);
+      queryParams.push(startYear, endYear);
+      paramIndex += 2;
+    }
+    
+    // Filter by month range (if in the same year)
+    if (startMonth && endMonth) {
+      if (startYear === endYear) {
+        whereConditions.push(`EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $${paramIndex} AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $${paramIndex + 1}`);
+        queryParams.push(startMonth, endMonth);
+        paramIndex += 2;
+      } else if (startYear && endYear) {
+        // More complex case for cross-year ranges
+        whereConditions.push(`
+          (
+            (EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $${paramIndex} AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $${paramIndex + 1}) OR
+            (EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) > $${paramIndex} AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) < $${paramIndex + 2}) OR
+            (EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $${paramIndex + 2} AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $${paramIndex + 3})
+          )
+        `);
+        queryParams.push(startYear, startMonth, endYear, endMonth);
+        paramIndex += 4;
+      }
+    }
+    
+    // Apply the WHERE conditions if any
+    if (whereConditions.length > 0) {
+      query += ` AND ${whereConditions.join(' AND ')}`;
+    }
+    
+    // Complete the query with GROUP BY and ORDER BY
+    query += `
+    GROUP BY year, bulan, bki
+    ORDER BY year, bulan
+    `;
+    
+    console.log("BarbkiChart Query:", query);
+    console.log("Query Parameters:", queryParams);
+    
+    // Execute the query
+    const result = queryParams.length > 0 
+      ? await pool.query(query, queryParams)
+      : await pool.query(query);
 
     res.json(result.rows);
   } catch (error) {

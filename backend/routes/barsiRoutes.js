@@ -4,7 +4,7 @@ const { Pool } = require("pg");
 const router = express.Router();
 const pool = new Pool({
     user: "kafkauser",
-    host: "172.21.80.1",
+    host: "172.26.128.1",
     database: "staging_dwh",
     password: "JsuA2d5sh4bhLAya",
     port: 5458,
@@ -12,30 +12,122 @@ const pool = new Pool({
 
 router.get("/", async (req, res) => {
   try {
-    const query = `
+    // Extract time range parameters
+    const { startYear, endYear, startMonth, endMonth, startDate, endDate } = req.query;
+    
+    console.log("API Request Parameters:", { startYear, endYear, startMonth, endMonth, startDate, endDate });
+    
+    // Start building the query
+    let query = `
     SELECT 
         EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year, 
         EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
         si
     FROM split_pivot_all_full_real_test
     WHERE id = 138
-      AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= 1 -- Filter mulai dari bulan 8 (Agustus)
-    GROUP BY year, bulan, si
-    ORDER BY year, bulan;
     `;
-
-
-    const result = await pool.query(query);
     
+    // Add time range filters if provided
+    const whereConditions = [];
+    const queryParams = [];
+    let paramIndex = 1;
+    
+    // Create a date range filter that works across years
+    if (startYear && endYear) {
+      // This handles the general case across years
+      // Convert year/month combinations to YYYY-MM format for comparison
+      whereConditions.push(`
+        (
+          (EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) * 100 + EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM'))) 
+          >= 
+          ($${paramIndex} * 100 + $${paramIndex + 1})
+          AND
+          (EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) * 100 + EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM'))) 
+          <= 
+          ($${paramIndex + 2} * 100 + $${paramIndex + 3})
+        )
+      `);
+      
+      // Pass the values for year and month
+      queryParams.push(
+        parseInt(startYear),
+        startMonth ? parseInt(startMonth) : 1,
+        parseInt(endYear),
+        endMonth ? parseInt(endMonth) : 12
+      );
+      paramIndex += 4;
+    }
+    // If only specific dates are provided, use them for filtering
+    else if (startDate && endDate) {
+      whereConditions.push(`
+        (
+          TO_DATE(tahun::TEXT || bulan::TEXT, 'YYYYMM') 
+          BETWEEN 
+          TO_DATE($${paramIndex}, 'YYYY-MM-DD') AND TO_DATE($${paramIndex + 1}, 'YYYY-MM-DD')
+        )
+      `);
+      queryParams.push(startDate, endDate);
+      paramIndex += 2;
+    }
+    
+    // Apply the WHERE conditions if any
+    if (whereConditions.length > 0) {
+      query += ` AND ${whereConditions.join(' AND ')}`;
+    }
+    
+    // Complete the query with GROUP BY and ORDER BY
+    query += `
+    GROUP BY year, bulan, si
+    ORDER BY year, bulan
+    `;
+    
+    console.log("BarsiChart Query:", query);
+    console.log("Query Parameters:", queryParams);
+    
+    // Execute the query
+    const result = queryParams.length > 0 
+      ? await pool.query(query, queryParams)
+      : await pool.query(query);
 
-    res.json(result.rows);
+    // Log the number of rows returned
+    console.log(`Query returned ${result.rows.length} rows`);
+    
+    // Transform the data for frontend consumption if needed
+    const transformedData = result.rows.map(row => ({
+      bulan: `${row.year}-${String(row.bulan).padStart(2, '0')}`,
+      si: row.si,
+      year: row.year
+    }));
+    
+    res.json(transformedData);
   } catch (error) {
     console.error("Database error:", error);
     res.status(500).json({ error: "Terjadi kesalahan pada server" });
   }
 });
 
-// Tambah data ke tabel split_pivot_all_full_real_test
+// Endpoint to get available years and months
+router.get("/available-periods", async (req, res) => {
+  try {
+    const query = `
+      SELECT 
+        EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+        array_agg(DISTINCT EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM'))) AS available_months
+      FROM split_pivot_all_full_real_test
+      WHERE id = 138
+      GROUP BY year
+      ORDER BY year
+    `;
+    
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error fetching available periods:", error);
+    res.status(500).json({ error: "Terjadi kesalahan pada server" });
+  }
+});
+
+// Add these endpoints from your original code
 router.post("/", async (req, res) => {
   try {
     const { id, code_fs, code_calk, coa_holding, description, type, tahun, bulan, bki, sci, si, combine, dr, cr, konsol } = req.body;
@@ -57,7 +149,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Update data berdasarkan ID
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -80,7 +171,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Hapus data berdasarkan ID
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;

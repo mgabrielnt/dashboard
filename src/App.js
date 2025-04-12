@@ -15,6 +15,10 @@ import Sidebar from "./scenes/global/Sidebar";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Profile from "./components/Profile";
+import ChatbotPage from "./scenes/chatbot";
+
+// Custom Components
+import Breadcrumb from "./components/Breadcrumb"; // Import the Breadcrumb component
 
 // Dashboard Pages
 import Dashboard from "./scenes/dashboard";
@@ -171,6 +175,7 @@ function App() {
                   <Route path="/contacts2" element={<PrivateRoute auth={auth}><Contacts2 /></PrivateRoute>} />
                   <Route path="/invoices" element={<PrivateRoute auth={auth}><Invoices /></PrivateRoute>} />
                   <Route path="/form" element={<PrivateRoute auth={auth}><Form /></PrivateRoute>} />
+                  <Route path="/chatbot" element={<PrivateRoute auth={auth}><ChatbotPage auth={auth} /></PrivateRoute>} />
                   <Route path="/bar" element={<PrivateRoute auth={auth}><Bar /></PrivateRoute>} />
                   <Route path="/pie" element={<PrivateRoute auth={auth}><Pie /></PrivateRoute>} />
                   <Route path="/line" element={<PrivateRoute auth={auth}><Line /></PrivateRoute>} />

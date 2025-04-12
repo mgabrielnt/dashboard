@@ -1,0 +1,336 @@
+[2025-03-20T13:53:10.406Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:53:10.406Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:53:10.432Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:53:10.432Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:54:26.951Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:54:26.951Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:54:26.975Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:54:26.975Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:05.324Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:05.324Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:05.346Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:05.346Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:32.037Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:32.037Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:32.058Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:32.058Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:33.390Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:33.390Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:33.398Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:33.398Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:53.493Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:53.493Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:57:53.515Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:57:53.515Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:10.112Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:10.112Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:10.135Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:10.135Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:25.021Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:25.022Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:25.030Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:25.030Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:47.713Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:47.713Z] With parameters: ["2020","1","12"]
+[2025-03-20T13:58:47.737Z] Executing query: 
+      SELECT 
+          EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) AS year,
+          EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) AS bulan,
+          bki, sci, si
+      FROM split_pivot_all_full_real_test
+      WHERE id = 200
+     AND EXTRACT(YEAR FROM TO_DATE(tahun::TEXT, 'YYYY')) = $1 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) >= $2 AND EXTRACT(MONTH FROM TO_DATE(bulan::TEXT, 'MM')) <= $3
+      GROUP BY year, bulan, bki, sci, si
+      ORDER BY year, bulan
+    
+[2025-03-20T13:58:47.737Z] With parameters: ["2020","1","12"]
+[2025-03-20T14:00:25.673Z] ERROR: Database error - log is not defined
+[2025-03-20T14:00:25.673Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:00:25.679Z] ERROR: Database error - log is not defined
+[2025-03-20T14:00:25.679Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:03.495Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:03.495Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:03.498Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:03.498Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:04.581Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:04.581Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:04.585Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:04.585Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:12.890Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:12.890Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:12.894Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:12.894Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:14.338Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:14.338Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
+[2025-03-20T14:01:14.341Z] ERROR: Database error - log is not defined
+[2025-03-20T14:01:14.341Z] STACK: ReferenceError: log is not defined
+    at C:\dashboard\dashboard\backend\routes\lineRoutes.js:91:5
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (C:\dashboard\dashboard\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (C:\dashboard\dashboard\node_modules\express\lib\router\layer.js:95:5)
+    at C:\dashboard\dashboard\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:346:12)
+    at next (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:175:3)
+    at router (C:\dashboard\dashboard\node_modules\express\lib\router\index.js:47:12)
