@@ -1,4 +1,4 @@
-import { Box, IconButton, useTheme, Popover, Button, Menu, MenuItem, Avatar, Typography, Divider } from "@mui/material";
+import { Box, IconButton, useTheme, Menu, MenuItem, Avatar, Typography, Divider } from "@mui/material";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ColorModeContext, tokens } from "../../theme";
@@ -10,242 +10,92 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import Breadcrumb from "../../components/Breadcrumb"; // Import Breadcrumb component
+import Breadcrumb from "../../components/Breadcrumb";
 
-const API_URL = "http://localhost:5000"; // Define the backend URL
+const API_URL = "http://localhost:5000";
 
-const Topbar = ({ setIsSidebar, auth, onLogout }) => {
+const routeTitles = {
+  "/": "Dashboard Keuangan Konsolidasi",
+  "/team": "Team Management",
+  "/contacts": "PT Superintending Company of Indonesia (SUCOFINDO)",
+  "/contacts1": "PT Biro Klasifikasi Indonesia (Persero)",
+  "/contacts2": "PT Surveyor Indonesia (Persero)",
+  "/invoices": "Invoices",
+  "/form": "Form",
+  "/chatbot": "Database Assistant",
+  "/bar": "Bar Chart",
+  "/pie": "Pie Chart",
+  "/line": "Line Chart",
+  "/faq": "FAQ",
+  "/calendar": "Calendar",
+  "/geography": "Geography",
+  "/profile": "User Profile",
+};
+
+const Topbar = ({ auth, onLogout }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const navigate = useNavigate();
-  const location = useLocation(); // Get current location/route
-  
-  // State for page title
-  const [pageTitle, setPageTitle] = useState("Dashboard");
-  
-  // Main menu popup
-  const [open, setOpen] = useState(false);
-  const [menuAnchor, setMenuAnchor] = useState(null);
-  const [selectedIndex, setSelectedIndex] = useState(null);
-
-  // User profile menu
+  const location = useLocation();
+  const [pageTitle, setPageTitle] = useState("Dashboard Keuangan Konsolidasi");
   const [userMenuAnchor, setUserMenuAnchor] = useState(null);
   const userMenuOpen = Boolean(userMenuAnchor);
+  const user = auth?.user || {};
+  const isDashboard = location.pathname === "/";
 
-  // Update page title based on current route
   useEffect(() => {
-    const path = location.pathname;
-    let title = "Dashboard";
-    
-    // Map routes to display names
-    const routeTitles = {
-      "/": "Dashboard",
-      "/team": "Team Management",
-      "/contacts": "Scientific Instrumentations",
-      "/contacts1": "PT BKI Certification",
-      "/contacts2": "System Integration",
-      "/invoices": "Invoices",
-      "/form": "Form",
-      "/chatbot": "ChatBot",
-      "/bar": "Bar Chart",
-      "/pie": "Pie Chart",
-      "/line": "Line Chart",
-      "/faq": "FAQ",
-      "/calendar": "Calendar",
-      "/geography": "Geography",
-      "/profile": "User Profile"
-    };
-    
-    // Set the title based on current path
-    if (routeTitles[path]) {
-      title = routeTitles[path];
-    }
-    
-    setPageTitle(title);
-  }, [location]);
+    setPageTitle(routeTitles[location.pathname] || "Dashboard Keuangan Konsolidasi");
+  }, [location.pathname]);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
+  const handleUserMenuOpen = (event) => setUserMenuAnchor(event.currentTarget);
+  const handleUserMenuClose = () => setUserMenuAnchor(null);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleMenuOpen = (event, index) => {
-    setSelectedIndex(index);
-    setMenuAnchor(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setMenuAnchor(null);
-    setSelectedIndex(null);
-  };
-
-  const menuOpen = Boolean(menuAnchor);
-
-  // User menu handlers
-  const handleUserMenuOpen = (event) => {
-    setUserMenuAnchor(event.currentTarget);
-  };
-  
-  const handleUserMenuClose = () => {
-    setUserMenuAnchor(null);
-  };
-  
   const handleProfileClick = () => {
     handleUserMenuClose();
     navigate("/profile");
   };
-  
+
   const handleLogout = () => {
     handleUserMenuClose();
-    if (onLogout) {
-      onLogout();
-    }
+    if (onLogout) onLogout();
   };
 
-  // Make sure auth and user are defined
-  const user = auth?.user || {};
-
-  // Function to get the correct profile picture URL
   const getProfilePictureUrl = (pictureUrl) => {
     if (!pictureUrl) return "";
     if (pictureUrl.startsWith("http")) return pictureUrl;
     return `${API_URL}${pictureUrl}`;
   };
 
-  // Check if on dashboard to determine whether to show breadcrumb
-  const isDashboard = location.pathname === '/';
-
   return (
     <Box>
-      <Box display="flex" justifyContent="space-between" p={2}>
-        {/* PAGE TITLE DISPLAY INSTEAD OF OPEN MENU */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" px={2} py={1.5}>
         <Box>
           <Typography
             variant="h4"
-            fontWeight="bold"
+            fontWeight="900"
             sx={{
               color: colors.grey[100],
-              padding: "8px 16px",
-              borderRadius: "4px",
-              backgroundColor: "rgb(62, 67, 150)",
-              display: "inline-block"
+              px: 2,
+              py: 1,
+              borderRadius: "999px",
+              background: "linear-gradient(135deg, rgba(244,196,48,0.16), rgba(103,232,249,0.08))",
+              border: "1px solid rgba(255,255,255,0.11)",
+              boxShadow: "0 18px 48px rgba(0,0,0,0.22)",
+              display: "inline-block",
+              maxWidth: { xs: "calc(100vw - 170px)", md: "780px" },
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
           >
             {pageTitle}
           </Typography>
-          <Popover
-            open={open}
-            onClose={handleClose}
-            anchorReference="none"
-            sx={{
-              position: "fixed",
-              top: "1%",
-              left: "60%",
-              transform: "translateX(-50%)",
-              '& .MuiPaper-root': {
-                backgroundColor: "rgb(62, 67, 150)",
-                minWidth: "500px",
-                minHeight: "250px",
-                padding: "16px"
-              }
-            }}
-          >
-            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
-              {[...Array(4)].map((_, index) => (
-                <Box key={index} textAlign="center">
-                  <Box sx={{ color: "white", mb: 1, fontSize: "1.1rem", fontWeight: "bold" }}>
-                    Option {index + 1}
-                  </Box>
-                  <Button 
-                    variant="outlined" 
-                    fullWidth 
-                    onClick={(e) => handleMenuOpen(e, index)}
-                    sx={{ 
-                      color: "white", 
-                      backgroundColor: "rgb(30, 35, 80)", 
-                      border: "2px solid black", 
-                      borderRadius: "12px", 
-                      fontSize: "1rem",
-                      padding: "10px",
-                      '&:hover': { backgroundColor: "rgba(255, 255, 255, 0.2)" } 
-                    }}
-                  >
-                    Option {index + 1}
-                  </Button>
-                  {selectedIndex === index && (
-                    <Menu
-                      anchorEl={menuAnchor}
-                      open={menuOpen}
-                      onClose={handleMenuClose}
-                      sx={{
-                        '& .MuiPaper-root': {
-                          backgroundColor: "rgb(62, 67, 150)",
-                          color: "white"
-                        }
-                      }}
-                    >
-                      <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 1</MenuItem>
-                      <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 2</MenuItem>
-                      <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 3</MenuItem>
-                    </Menu>
-                  )}
-                </Box>
-              ))}
-              {/* Option 5 di bawah, membentang sepanjang 2 kolom */}
-              <Box gridColumn="span 2" textAlign="center">
-                <Box sx={{ color: "white", mb: 1, fontSize: "1.1rem", fontWeight: "bold" }}>
-                  Option 5
-                </Box>
-                <Button 
-                  variant="outlined" 
-                  fullWidth 
-                  onClick={(e) => handleMenuOpen(e, 4)}
-                  sx={{ 
-                    color: "white", 
-                    backgroundColor: "rgb(30, 35, 80)", 
-                    border: "2px solid black", 
-                    borderRadius: "12px", 
-                    fontSize: "1rem",
-                    padding: "12px",
-                    '&:hover': { backgroundColor: "rgba(255, 255, 255, 0.2)" } 
-                  }}
-                >
-                  Option 5
-                </Button>
-                {selectedIndex === 4 && (
-                  <Menu
-                    anchorEl={menuAnchor}
-                    open={menuOpen}
-                    onClose={handleMenuClose}
-                    sx={{
-                      '& .MuiPaper-root': {
-                        backgroundColor: "rgb(62, 67, 150)",
-                        color: "white"
-                      }
-                    }}
-                  >
-                    <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 1</MenuItem>
-                    <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 2</MenuItem>
-                    <MenuItem onClick={handleMenuClose} sx={{ color: "white" }}>Sub Option 3</MenuItem>
-                  </Menu>
-                )}
-              </Box>
-            </Box>
-          </Popover>
         </Box>
 
-        {/* ICONS */}
-        <Box display="flex">
+        <Box display="flex" alignItems="center" gap={0.5}>
           <IconButton onClick={colorMode.toggleColorMode}>
-            {theme.palette.mode === "dark" ? (
-              <DarkModeOutlinedIcon />
-            ) : (
-              <LightModeOutlinedIcon />
-            )}
+            {theme.palette.mode === "dark" ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
           </IconButton>
           <IconButton>
             <NotificationsOutlinedIcon />
@@ -253,17 +103,11 @@ const Topbar = ({ setIsSidebar, auth, onLogout }) => {
           <IconButton>
             <SettingsOutlinedIcon />
           </IconButton>
-          
-          {/* USER PROFILE BUTTON & MENU */}
           <IconButton onClick={handleUserMenuOpen}>
             {user?.profile_picture ? (
-              <Avatar 
-                src={getProfilePictureUrl(user.profile_picture)} 
-                sx={{ 
-                  width: 24, 
-                  height: 24,
-                  backgroundColor: user?.role === "admin" ? colors.greenAccent[600] : colors.blueAccent[500]
-                }}
+              <Avatar
+                src={getProfilePictureUrl(user.profile_picture)}
+                sx={{ width: 28, height: 28, backgroundColor: user?.role === "admin" ? colors.blueAccent[700] : colors.blueAccent[500] }}
               >
                 {user.name ? user.name.charAt(0).toUpperCase() : "U"}
               </Avatar>
@@ -271,8 +115,7 @@ const Topbar = ({ setIsSidebar, auth, onLogout }) => {
               <PersonOutlinedIcon />
             )}
           </IconButton>
-          
-          {/* USER PROFILE DROPDOWN MENU */}
+
           <Menu
             anchorEl={userMenuAnchor}
             open={userMenuOpen}
@@ -280,64 +123,51 @@ const Topbar = ({ setIsSidebar, auth, onLogout }) => {
             PaperProps={{
               elevation: 0,
               sx: {
-                overflow: 'visible',
-                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                overflow: "visible",
                 mt: 1.5,
                 backgroundColor: colors.primary[400],
                 color: colors.grey[100],
-                '& .MuiAvatar-root': {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
+                minWidth: 230,
+                "& .MuiAvatar-root": { width: 32, height: 32, ml: -0.5, mr: 1 },
               },
             }}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <Box px={2} py={1}>
-              <Typography variant="subtitle1" fontWeight="bold">
-                {user?.name || "User"}
-              </Typography>
-              <Typography variant="body2" color={colors.grey[300]}>
-                {user?.email || ""}
-              </Typography>
+            <Box px={2} py={1.2}>
+              <Typography variant="subtitle1" fontWeight="900">{user?.name || "User"}</Typography>
+              <Typography variant="body2" color={colors.grey[300]}>{user?.email || ""}</Typography>
               <Typography
                 variant="caption"
                 sx={{
                   display: "inline-block",
-                  px: 1,
-                  py: 0.5,
-                  mt: 0.5,
-                  borderRadius: "4px",
-                  backgroundColor: user?.role === "admin" ? colors.greenAccent[600] : colors.blueAccent[700],
+                  px: 1.2,
+                  py: 0.4,
+                  mt: 0.8,
+                  borderRadius: "999px",
+                  background: user?.role === "admin" ? "rgba(244,196,48,0.18)" : "rgba(103,232,249,0.14)",
+                  color: colors.grey[100],
+                  fontWeight: 800,
                 }}
               >
                 {user?.role || "user"}
               </Typography>
             </Box>
-            
             <Divider sx={{ borderColor: colors.grey[700] }} />
-            
             <MenuItem onClick={handleProfileClick} sx={{ color: colors.grey[100] }}>
-              <AccountCircleIcon sx={{ mr: 1, color: colors.greenAccent[400] }} /> Profile
+              <AccountCircleIcon sx={{ mr: 1, color: colors.blueAccent[700] }} /> Profile
             </MenuItem>
-            
             <MenuItem onClick={handleUserMenuClose} sx={{ color: colors.grey[100] }}>
-              <HelpOutlineIcon sx={{ mr: 1, color: colors.greenAccent[400] }} /> Help
+              <HelpOutlineIcon sx={{ mr: 1, color: colors.blueAccent[400] }} /> Help
             </MenuItem>
-            
             <Divider sx={{ borderColor: colors.grey[700] }} />
-            
             <MenuItem onClick={handleLogout} sx={{ color: colors.grey[100] }}>
               <LogoutIcon sx={{ mr: 1, color: colors.redAccent[400] }} /> Logout
             </MenuItem>
           </Menu>
         </Box>
       </Box>
-      
-      {/* BREADCRUMB - Only show if not on dashboard */}
+
       {!isDashboard && (
         <Box px={2}>
           <Breadcrumb />
