@@ -2,9 +2,10 @@
   "name": "dashboard-backend",
   "version": "0.1.0",
   "private": true,
-  "main": "server.js",
+  "main": "server.vercel.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.vercel.js",
+    "start:db": "node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
