@@ -33,7 +33,7 @@ const Login = ({ setAuth }) => {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
     setAuth({ isAuthenticated: true, isLoading: false, user });
-    navigate("/");
+    navigate(user?.role === "admin" ? "/team" : "/");
   };
 
   const demoFallbackLogin = () => {
