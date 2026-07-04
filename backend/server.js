@@ -17,9 +17,7 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:3000")
 
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error(`CORS blocked for origin: ${origin}`));
   },
   credentials: true,
@@ -30,11 +28,11 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  user: process.env.DB_USER || "kafkauser",
-  host: process.env.DB_HOST || "172.26.128.1",
-  database: process.env.DB_NAME || "staging_dwh",
-  password: process.env.DB_PASSWORD || "JsuA2d5sh4bhLAya",
-  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 5458,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : undefined,
   ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : undefined,
 });
 
