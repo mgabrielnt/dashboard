@@ -1,15 +1,8 @@
 const express = require("express");
-const { Pool } = require("pg");
 const { body, validationResult } = require("express-validator");
+const pool = require("../config/db");
 
 const router = express.Router();
-const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "dashboard",
-    password: "1",
-    port: 5432,
-});
 
 // Tambah user ke tabel users
 router.post(
