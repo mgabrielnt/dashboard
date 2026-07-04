@@ -10,13 +10,12 @@ const Breadcrumb = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   
-  // Define route mappings for display names
   const routeMap = {
     '': 'Home',
     'team': 'Team Management',
-    'contacts': 'Scientific Instrumentations',
-    'contacts1': 'PT BKI Certification',
-    'contacts2': 'System Integration',
+    'contacts': 'PT Superintending Company of Indonesia (SUCOFINDO)',
+    'contacts1': 'PT Biro Klasifikasi Indonesia (Persero)',
+    'contacts2': 'PT Surveyor Indonesia (Persero)',
     'invoices': 'Invoices',
     'form': 'Form',
     'chatbot': 'ChatBot',
@@ -29,12 +28,10 @@ const Breadcrumb = () => {
     'profile': 'User Profile'
   };
 
-  // Generate breadcrumb paths based on current location
   const pathnames = useMemo(() => {
     return location.pathname.split('/').filter(x => x);
   }, [location]);
   
-  // If we're on the dashboard (root path), don't show breadcrumbs
   if (location.pathname === '/') {
     return null;
   }
@@ -42,28 +39,28 @@ const Breadcrumb = () => {
   return (
     <Box
       sx={{
-        backgroundColor: colors.primary[400],
-        borderRadius: '4px',
-        padding: '8px 16px',
+        background: 'linear-gradient(135deg, rgba(244,196,48,0.10), rgba(103,232,249,0.06))',
+        border: '1px solid rgba(255,255,255,0.10)',
+        borderRadius: '16px',
+        padding: '10px 16px',
         marginBottom: '16px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        boxShadow: '0 16px 40px rgba(0,0,0,0.20)',
+        backdropFilter: 'blur(18px)'
       }}
     >
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
+      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
         <MuiLink
           component={Link}
           to="/"
           sx={{
             display: 'flex',
             alignItems: 'center',
-            color: colors.greenAccent[400],
+            color: colors.blueAccent[300],
             textDecoration: 'none',
+            fontWeight: 800,
             '&:hover': {
-              textDecoration: 'underline',
-              color: colors.greenAccent[300]
+              textDecoration: 'none',
+              color: colors.blueAccent[200]
             }
           }}
         >
@@ -77,11 +74,7 @@ const Breadcrumb = () => {
           const displayName = routeMap[path] || path.charAt(0).toUpperCase() + path.slice(1);
 
           return isLast ? (
-            <Typography 
-              key={path}
-              color={colors.grey[100]}
-              fontWeight="bold"
-            >
+            <Typography key={path} color={colors.grey[100]} fontWeight="900">
               {displayName}
             </Typography>
           ) : (
@@ -92,8 +85,9 @@ const Breadcrumb = () => {
               sx={{
                 color: colors.blueAccent[300],
                 textDecoration: 'none',
+                fontWeight: 800,
                 '&:hover': {
-                  textDecoration: 'underline',
+                  textDecoration: 'none',
                   color: colors.blueAccent[200]
                 }
               }}
