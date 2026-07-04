@@ -1,70 +1,90 @@
-# Getting Started with Create React App
+# Professional Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dashboard React + Express + PostgreSQL untuk visualisasi BKI, SCI, SI, calendar, profile, team, chart, export PDF, dan chatbot.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+- React 18 + Material UI
+- Nivo charts
+- FullCalendar
+- Express API
+- PostgreSQL
+- JWT session authentication
 
-### `npm start`
+## Run lokal
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+npm run dev
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Perintah `npm run dev` menjalankan backend di port `5000` dan React client di port `3000`.
 
-### `npm test`
+## Environment lokal
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Buat file `.env` di root project untuk backend dan client development.
 
-### `npm run build`
+```env
+NODE_ENV=development
+PORT=5000
+CORS_ORIGIN=http://localhost:3000
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+DB_USER=postgres_user
+DB_HOST=localhost
+DB_NAME=database_name
+DB_PASSWORD=database_password
+DB_PORT=5432
+DB_SSL=false
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+JWT_SECRET=change_this_to_a_long_random_value
+GOOGLE_CLIENT_ID=your_google_client_id
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+REACT_APP_API_URL=http://localhost:5000
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Untuk database hosting seperti Render, Railway, Supabase, atau Neon, kamu bisa memakai `DATABASE_URL` dan `DB_SSL=true`.
 
-### `npm run eject`
+## Build production
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run build
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+`npm start` menjalankan Express server. Saat `NODE_ENV=production`, Express otomatis menyajikan React build dari folder `build` dan semua route React tetap aman ketika refresh halaman.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Deploy production
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Rekomendasi paling sederhana: deploy sebagai satu web service Node.js.
 
-## Learn More
+Build command:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm install && npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Start command:
 
-### Code Splitting
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Environment production minimal:
 
-### Analyzing the Bundle Size
+```env
+NODE_ENV=production
+PORT=10000
+CORS_ORIGIN=https://domain-dashboard-kamu.com
+DATABASE_URL=postgresql://user:password@host:5432/dbname
+DB_SSL=true
+JWT_SECRET=change_this_to_a_long_random_value
+GOOGLE_CLIENT_ID=your_google_client_id
+REACT_APP_GOOGLE_CLIENT_ID=your_google_client_id
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Catatan penting
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Jangan commit file `.env` asli.
+- Pastikan tabel PostgreSQL yang dipakai route sudah tersedia.
+- Jika frontend dan backend dipisah domain, isi `REACT_APP_API_URL` dengan URL backend production.
+- Jika memakai satu domain Node service, `REACT_APP_API_URL` boleh dikosongkan karena request API akan memakai path relative `/api`.
