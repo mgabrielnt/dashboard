@@ -7,7 +7,7 @@
     "backend": {
       "root": "backend",
       "runtime": "node",
-      "entrypoint": "server.js"
+      "entrypoint": "server.vercel.js"
     }
   },
   "rewrites": [
